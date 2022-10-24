@@ -1,47 +1,32 @@
 
-variable "credentials_file" { 
-  default = "/home/for9482/cis-91/cis-91-remake-5412a575c80d.json" 
-}
-
-variable "project" {
-  default = "CIS-91"
-}
-
-variable "region" {
-  default = "us-central1"
-}
-
-variable "zone" {
-  default = "us-central1-c"
-}
-
 terraform {
   required_providers {
     google = {
-      source  = "hashicorp/google"
+      source = "hashicorp/google"
       version = "3.5.0"
     }
   }
 }
 
 provider "google" {
-  credentials = file(var.credentials_file)
-  region  = var.region
-  zone    = var.zone 
-  project = var.project
+credentials = file("/home/for9482/cis-91-terraform-364016-5a6d4bca46ef.json")
+
+project = var.project
+region  = var.region
+zone    = var.zone
 }
 
 resource "google_compute_network" "vpc_network" {
-  name = "cis91-network"
+  name = "terraform-network"
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name         = "cis91"
-  machine_type = "e2-micro"
+  name         = "terraform-instance"
+  machine_type = "f1-micro"
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      image = "debian-cloud/debian-11"
     }
   }
 
@@ -57,7 +42,7 @@ resource "google_compute_firewall" "default-firewall" {
   network = google_compute_network.vpc_network.name
   allow {
     protocol = "tcp"
-    ports = ["22"]
+    ports = ["22", "80", "3000", "5000"]
   }
   source_ranges = ["0.0.0.0/0"]
 }

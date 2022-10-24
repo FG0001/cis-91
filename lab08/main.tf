@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     google = {
@@ -8,7 +9,7 @@ terraform {
 }
 
 provider "google" {
-  credentials = file(var.credentials_file)
+ credentials = file(var.credentials_file)
 
 project = var.project
 region  = var.region
@@ -22,6 +23,7 @@ resource "google_compute_network" "vpc_network" {
 resource "google_compute_instance" "vm_instance" {
   name         = "terraform-instance"
   machine_type = "f1-micro"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -34,6 +36,7 @@ resource "google_compute_instance" "vm_instance" {
     access_config {
     }
   }
+
 }
 
 resource "google_compute_firewall" "default-firewall" {
@@ -41,7 +44,7 @@ resource "google_compute_firewall" "default-firewall" {
   network = google_compute_network.vpc_network.name
   allow {
     protocol = "tcp"
-    ports = ["22", "80",]
+    ports = ["22", "80", "3000", "5000"]
   }
   source_ranges = ["0.0.0.0/0"]
 }
