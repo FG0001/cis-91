@@ -10,3 +10,12 @@
         name:
           - nginx
           - apache2
+          - php
+          - php-xml
+
+    - name: Mount extra disk
+      ansible.posix.mount:
+        path: /var/www
+        src: /dev/disk/by-id/google-dokuwiki
+        fstype: ext4
+        state: present
