@@ -12,10 +12,35 @@
           - apache2
           - php
           - php-xml
+    
+    - name: ext4 
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/disk/by-id/google-data
 
-    - name: Mount extra disk
+    - name: Mount extra disk ext4
       ansible.posix.mount:
         path: /var/www
         src: /dev/disk/by-id/google-dokuwiki
         fstype: ext4
         state: present
+
+    - name: html dir
+      ansible.posix.mount:
+        path: /var/www
+        owner: www-data
+        state: directory
+
+    - name: Download Dokuwiki
+      ansible.builtin.unarchive:
+        src: https://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz
+        dest: /var/www/html
+        owner: www-data
+        remote_src: yes
+        extra_opts: --strip-components=1
+
+    - name: shell backup
+      ansible.builtin.copy:
+        src: backup.sh
+        dest: /etc/cron/hourly/backup
+        mode: u+x
