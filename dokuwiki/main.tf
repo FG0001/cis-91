@@ -35,6 +35,10 @@ resource "google_compute_instance" "vm_instance" {
     access_config {
     }
   }
+  attached_disk {
+    source = google_compute_disk.docuwiki.self_link
+    device_name = "docuwiki"
+  }
 }
 
 resource "google_compute_firewall" "default-firewall" {
