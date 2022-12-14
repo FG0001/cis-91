@@ -1,6 +1,6 @@
 ---
 - hosts: gcp_role_web
-  name: Apache Install
+  name: Install Apache on the web servers
   become: yes
   tasks:
     - name: Install Packages 
