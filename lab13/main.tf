@@ -41,6 +41,8 @@ resource "google_compute_instance" "webservers" {
   }
 }
 
+#Firewall 
+
 resource "google_compute_firewall" "default-firewall" {
   name = "default-firewall"
   network = google_compute_network.vpc_network.name
@@ -50,6 +52,7 @@ resource "google_compute_firewall" "default-firewall" {
   }
   source_ranges = ["0.0.0.0/0"]
 }
+#Healthcheck 
 
 resource "google_compute_health_check" "webservers" {
   name = "webserver-health-check"
@@ -61,6 +64,8 @@ resource "google_compute_health_check" "webservers" {
     port = 80
   }
 }
+
+#Webserver
 
 resource "google_compute_instance_group" "webservers" {
   name        = "cis91-webservers"
@@ -74,6 +79,8 @@ resource "google_compute_instance_group" "webservers" {
   }
 }
 
+#HTTP web-service
+
 resource "google_compute_backend_service" "webservice" {
   name      = "web-service"
   port_name = "http"
@@ -83,24 +90,33 @@ resource "google_compute_backend_service" "webservice" {
     group = google_compute_instance_group.webservers.id
   }
 
+#Health check
+
   health_checks = [
     google_compute_health_check.webservers.id
   ]
 }
 
+#URL map
+
 resource "google_compute_url_map" "default" {
   name            = "my-site"
   default_service = google_compute_backend_service.webservice.id
 }
+#Web proxy
 
 resource "google_compute_target_http_proxy" "default" {
   name     = "web-proxy"
   url_map  = google_compute_url_map.default.id
 }
 
+#External address
+
 resource "google_compute_global_address" "default" {
   name = "external-address"
 }
+
+#Forwarding
 
 resource "google_compute_global_forwarding_rule" "default" {
   name                  = "forward-application"
