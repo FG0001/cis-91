@@ -3,7 +3,7 @@
   name: Apache Install
   become: yes
   tasks:
-    - name: Packages 
+    - name: Install Packages 
       ansible.builtin.apt:
         name:
           - apache2
