@@ -10,9 +10,10 @@
         name:
           - python3-pip 
           - python3-venv
+          - nginx
           - apache2
           - nodejs
-          
+
 - hosts: gcp_role_web
   name: Install Apache on the web servers
   become: yes
