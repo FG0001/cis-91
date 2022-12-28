@@ -1,4 +1,4 @@
-# Cabrillo CIS-91 Public Course Files 
+# Cabrillo Terraform Files 
 
 This is a work in progress.
 
